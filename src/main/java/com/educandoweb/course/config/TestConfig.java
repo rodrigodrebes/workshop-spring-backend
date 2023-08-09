@@ -2,9 +2,11 @@ package com.educandoweb.course.config;
 
 import com.educandoweb.course.Repositories.CategoryRepository;
 import com.educandoweb.course.Repositories.OrderRepository;
+import com.educandoweb.course.Repositories.ProductRepository;
 import com.educandoweb.course.Repositories.UserRepository;
 import com.educandoweb.course.entities.Category;
 import com.educandoweb.course.entities.Order;
+import com.educandoweb.course.entities.Product;
 import com.educandoweb.course.entities.User;
 import com.educandoweb.course.entities.enums.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +22,14 @@ import java.util.Arrays;
 public class TestConfig implements CommandLineRunner {
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private OrderRepository orderRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -35,6 +39,14 @@ public class TestConfig implements CommandLineRunner {
         Category cat3 = new Category(null, "Computers");
 
         categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
+
+        Product p1 = new Product(null, "The Lord of The Rings", "Adventure Book by Tolkien",29.9," ");
+        Product p2 = new Product(null, "Smart TV Samsumg 56 pol", "Brand new",299.9," ");
+        Product p3 = new Product(null, "Macbook Pro M1 16gb", "15 pol., brand new",799.9," ");
+        Product p4 = new Product(null, "One Hundred Years of Solitude", "Magical Realism Book by Gabriel Garcia Marquez",39.9," ");
+        Product p5 = new Product(null, "Things Fall Apart", "Drama Book by Chinua Achebe",69.9," ");
+
+        productRepository.saveAll(Arrays.asList(p1,p2,p3,p4,p5));
 
         User u1 = new User(null, "Maria Brown", "mariab@gmail.com", "99988-8888", "passowrdmaria");
         User u2 = new User(null, "Alex Rosa", "alex@gmail.com", "98778-6688", "passowrdalex");
