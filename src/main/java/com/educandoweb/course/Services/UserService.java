@@ -1,8 +1,13 @@
 package com.educandoweb.course.Services;
 
 import com.educandoweb.course.Repositories.UserRepository;
+import com.educandoweb.course.Services.Exceptions.DatabaseException;
+import com.educandoweb.course.Services.Exceptions.ResourceNotFoundException;
 import com.educandoweb.course.entities.User;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +24,7 @@ public class UserService {
 
     public User findById(Long id){
         Optional<User> obj = userRepository.findById(id);
-        return obj.get();
+        return obj.orElseThrow(()-> new ResourceNotFoundException(id));
     }
 
     public User insert(User obj){
@@ -27,17 +32,30 @@ public class UserService {
     }
 
     public void delete(Long id){
+        try{
        userRepository.deleteById(id);
     }
 
+        catch(EmptyResultDataAccessException e){
+            throw new ResourceNotFoundException(id);
+        } catch (DataIntegrityViolationException e){
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
     public User update(Long id, User obj){
-        //prepara o objeto monitorado para edição
-        User entity = userRepository.getReferenceById(id);
+       try {
+           //prepara o objeto monitorado para edição
+           User entity = userRepository.getReferenceById(id);
 
-        // atualiza os dados do entity com base nos dados que chegam do obj
-        updateData(entity, obj);
-        return userRepository.save(entity);
+           // atualiza os dados do entity com base nos dados que chegam do obj
+           updateData(entity, obj);
+           return userRepository.save(entity);
+       }
 
+       catch (EntityNotFoundException e){
+           throw new ResourceNotFoundException(id);
+       }
     }
 
     private void updateData(User entity, User obj) {
