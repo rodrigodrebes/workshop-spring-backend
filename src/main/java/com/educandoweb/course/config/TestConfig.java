@@ -1,7 +1,9 @@
 package com.educandoweb.course.config;
 
+import com.educandoweb.course.Repositories.CategoryRepository;
 import com.educandoweb.course.Repositories.OrderRepository;
 import com.educandoweb.course.Repositories.UserRepository;
+import com.educandoweb.course.entities.Category;
 import com.educandoweb.course.entities.Order;
 import com.educandoweb.course.entities.User;
 import com.educandoweb.course.entities.enums.OrderStatus;
@@ -22,8 +24,17 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Override
     public void run(String... args) throws Exception {
+
+        Category cat1 = new Category(null, "Electronics");
+        Category cat2 = new Category(null, "Books");
+        Category cat3 = new Category(null, "Computers");
+
+        categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
 
         User u1 = new User(null, "Maria Brown", "mariab@gmail.com", "99988-8888", "passowrdmaria");
         User u2 = new User(null, "Alex Rosa", "alex@gmail.com", "98778-6688", "passowrdalex");
@@ -35,5 +46,7 @@ public class TestConfig implements CommandLineRunner {
         Order o3 = new Order(null, Instant.parse("2023-07-22T21:21:22Z"),OrderStatus.SHIPPED, u1);
 
         orderRepository.saveAll(Arrays.asList(o1,o2,o3));
+
+
     }
 }
